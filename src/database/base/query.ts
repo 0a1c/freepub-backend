@@ -35,7 +35,8 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
    * Build default search params for index and query (search all fields).
    *
    * @remarks
-   * See {@link https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#mongodb-pipeline-pipe.-search | docs on search parameters}.
+   * See {@link https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#mongodb-pipeline-pipe.-search | docs on search parameters}
+   * and {@link https://www.mongodb.com/docs/atlas/atlas-search/scoring/ | docs on weighting}
    */
   private buildSearchQuery = (
     index: string,
