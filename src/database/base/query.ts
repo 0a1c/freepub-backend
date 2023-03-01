@@ -1,6 +1,11 @@
 import DatabaseBaseClient from './base.js';
 import { DocFieldValue } from './types.js';
 
+interface QueryWeight {
+  path: string;
+  value: number;
+}
+
 export default class DatabaseQueryClient extends DatabaseBaseClient {
   queryAllDocuments = async () => this.collection.find({}).toArray();
 
@@ -17,9 +22,14 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
    * @remarks
    * See {@link https://www.mongodb.com/docs/atlas/atlas-search/tutorial/run-query/ | the docs on Atlas Search}.
    */
-  queryAgainstIndex = async (index: string, query: string) => {
-    const params = this.buildSearchParams(index, query);
-    return this.collection.aggregate([params]).toArray();
+  queryAgainstIndex = async (
+    index: string,
+    query: string,
+    weights?: QueryWeight[]
+  ) => {
+    const searchQuery = this.buildSearchQuery(index, query, weights);
+    console.log(searchQuery.$search.compound.should)
+    return this.collection.aggregate([searchQuery]).toArray();
   };
 
   /**
@@ -28,9 +38,12 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
    * @remarks
    * See {@link https://www.mongodb.com/docs/atlas/atlas-search/query-syntax/#mongodb-pipeline-pipe.-search | docs on search parameters}.
    */
-  private buildSearchParams = (index: string, query: string) => ({
-    $search: {
-      index,
+  private buildSearchQuery = (
+    index: string,
+    query: string,
+    weights?: QueryWeight[]
+  ) => {
+    const defaultQuery = {
       text: {
         query,
         path: {
@@ -38,6 +51,28 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
         },
         fuzzy: {},
       },
-    },
-  });
+    };
+
+    const weightedQueries = weights?.map((weight) => ({
+      text: {
+        query,
+        path: weight.path,
+        score: {
+          boost: {
+            value: weight.value,
+          },
+        },
+        fuzzy: {},
+      },
+    }));
+
+    return {
+      $search: {
+        index,
+        compound: {
+          should: [defaultQuery, ...weightedQueries],
+        },
+      },
+    };
+  };
 }

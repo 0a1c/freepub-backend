@@ -21,7 +21,7 @@ server.listen(port, hostname, async () => {
 
   const client = new IndexClient(collection);
 
-  const result = await client.queryContentIndex('pluto');
+  const result = await client.queryContentIndex('abcd');
 
   console.log(result);
 });
