@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import * as dotenv from 'dotenv';
-import DeleteClient from './database/delete.js';
+import DatabaseClient from './database/main.js';
 
 // Config .env variables
 dotenv.config();
@@ -18,10 +18,11 @@ server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
   const collection = process.env.MONGODB_COLLECTION;
 
-  const deleteClient = new DeleteClient(collection);
-  const deletedCount = await deleteClient.deleteManyDocuments({
-    location: 'San Francisco',
+  const client = new DatabaseClient(collection);
+
+  const result = await client.delete.deleteManyDocuments({
+    location: 'Jupiter',
   });
 
-  console.log(deletedCount);
+  console.log(result);
 });
