@@ -1,4 +1,5 @@
 import DatabaseBaseClient from './base.js';
+import { DocFieldValue } from './types.js';
 
 // See: https://www.mongodb.com/docs/manual/reference/operator/update/#std-label-update-operators
 type UpdateType = 'set' | 'min' | 'max';
@@ -13,9 +14,12 @@ type UpdatesParam = DocumentUpdate | DocumentUpdate[];
 export default class DatabaseUpdateClient extends DatabaseBaseClient {
   /**
    * @param filter - Matches where document.key = value
-   * @param updates - Updates to perform on the document 
+   * @param updates - Updates to perform on the document
    */
-  updateSingleDocument = async (filter: object, updates: UpdatesParam) => {
+  updateSingleDocument = async (
+    filter: DocFieldValue,
+    updates: UpdatesParam
+  ) => {
     const dbUpdates = this.parseDocumentUpdates(updates);
 
     const response = await this.collection.updateOne(filter, dbUpdates);
@@ -24,9 +28,12 @@ export default class DatabaseUpdateClient extends DatabaseBaseClient {
 
   /**
    * @param filter - Matches where document.key = value
-   * @param updates - Updates to perform on the document 
+   * @param updates - Updates to perform on the document
    */
-  updateManyDocuments = async (filter: object, updates: UpdatesParam) => {
+  updateManyDocuments = async (
+    filter: DocFieldValue,
+    updates: UpdatesParam
+  ) => {
     const dbUpdates = this.parseDocumentUpdates(updates);
     const response = await this.collection.updateMany(filter, dbUpdates);
     return response.modifiedCount;

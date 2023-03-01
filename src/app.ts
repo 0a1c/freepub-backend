@@ -1,8 +1,6 @@
 import { createServer } from 'http';
 import * as dotenv from 'dotenv';
-import InsertClient from './database/insert.js';
-import QueryClient from './database/query.js';
-import UpdateClient from './database/update.js';
+import DeleteClient from './database/delete.js';
 
 // Config .env variables
 dotenv.config();
@@ -20,27 +18,10 @@ server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
   const collection = process.env.MONGODB_COLLECTION;
 
-  const insertClient = new InsertClient(collection);
-  await insertClient.insertSingleDocument({
-    location: 'Jupiter',
+  const deleteClient = new DeleteClient(collection);
+  const deletedCount = await deleteClient.deleteManyDocuments({
+    location: 'San Francisco',
   });
 
-  const queryClient = new QueryClient(collection);
-  const docs = await queryClient.queryByEquality({
-    location: 'Mars',
-  });
-  console.log(docs);
-
-  const updateClient = new UpdateClient(collection);
-  const updateId = await updateClient.updateManyDocuments(
-    {
-      location: 'Mars',
-    },
-    {
-      type: 'set',
-      fields: { location: 'New Mars' },
-    }
-  );
-
-  console.log(updateId);
+  console.log(deletedCount);
 });

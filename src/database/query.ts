@@ -1,4 +1,5 @@
 import DatabaseBaseClient from './base.js';
+import { DocFieldValue } from './types.js';
 
 export default class DatabaseQueryClient extends DatabaseBaseClient {
   queryAllDocuments = async () => this.collection.find({}).toArray();
@@ -6,6 +7,6 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
   /**
    * @param filter - Matches where document.key = value
    */
-  queryByEquality = async (filter: object) =>
+  queryByEquality = async (filter: DocFieldValue) =>
     this.collection.find(filter).toArray();
 }
