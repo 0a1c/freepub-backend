@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import * as dotenv from 'dotenv';
-import DBClient from './database/main.js';
+import InsertClient from './database/insert.js';
+import QueryClient from './database/query.js';
 
 // Config .env variables
 dotenv.config();
@@ -14,9 +15,18 @@ const server = createServer((req, res) => {
   res.end('Hello World\n');
 });
 
-server.listen(port, hostname, () => {
+server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  const dbClient = new DBClient();
-  dbClient.insertSingleDocument({ location: 'Earth' });
-  dbClient.insertSingleDocument({ location: 'Jupiter' });
+  const collection = process.env.MONGODB_COLLECTION;
+
+  const insertClient = new InsertClient(collection);
+  await insertClient.insertSingleDocument({
+    location: 'Jupiter',
+  });
+
+  const queryClient = new QueryClient(collection);
+  const docs = await queryClient.queryByEquality({
+    location: 'Jupiter',
+  });
+  console.log(docs);
 });

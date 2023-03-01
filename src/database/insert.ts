@@ -1,16 +1,6 @@
-import { MongoClient, Collection } from 'mongodb';
+import DatabaseBaseClient from './base.js';
 
-export default class DatabaseClient {
-  private client: MongoClient;
-
-  private collection: Collection;
-
-  constructor(collection: string) {
-    this.client = new MongoClient(process.env.MONGODB_URL);
-    const db = this.client.db(process.env.MONGODB_DB);
-    this.collection = db.collection(collection);
-  }
-
+export default class DatabaseInsertClient extends DatabaseBaseClient {
   /**
    * Inserts a new document into the database.
    * @throws {Error}
