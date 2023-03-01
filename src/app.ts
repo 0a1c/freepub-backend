@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import * as dotenv from 'dotenv';
-import IndexClient from './database/indexer/main.js';
+import ReadClient from './ipfs/read.js';
 
 // Config .env variables
 dotenv.config();
@@ -17,11 +17,12 @@ const server = createServer((req, res) => {
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 
-  const collection = process.env.MONGODB_COLLECTION_INDEXES;
+  const client = new ReadClient();
+  const source = await client.readContent(
+    'QmQy2Dw4Wk7rdJKjThjYXzfFJNaRKRHhHP5gHHXroJMYxk'
+  );
 
-  const client = new IndexClient(collection);
-
-  const result = await client.queryContentIndex('abcd');
-
-  console.log(result);
+  for await (const entry of source) {
+    console.log(entry);
+  }
 });
