@@ -1,6 +1,4 @@
 import { pipe } from 'it-pipe';
-import toBuffer from 'it-to-buffer';
-import map from 'it-map';
 import * as Tar from 'it-tar';
 
 async function* tarballed(tarSource) {
@@ -10,7 +8,7 @@ async function* tarballed(tarSource) {
     for await (const entry of source) {
       yield {
         ...entry,
-        body: await toBuffer(map(entry.body, (buf) => buf.slice())),
+        body: entry.body,
       };
     }
   });
