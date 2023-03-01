@@ -24,7 +24,7 @@ export default class DatabaseIndexerClient extends DatabaseClient {
 
   queryContentIndex = async (query: string) => {
     const index = process.env.MONGODB_INDEX_SEARCH;
-    const weights = [QueryWeights.title];
+    const weights = [QueryWeights.title, QueryWeights.cid];
 
     return this.query.queryAgainstIndex(index, query, weights);
   };

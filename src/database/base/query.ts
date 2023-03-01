@@ -28,7 +28,6 @@ export default class DatabaseQueryClient extends DatabaseBaseClient {
     weights?: QueryWeight[]
   ) => {
     const searchQuery = this.buildSearchQuery(index, query, weights);
-    console.log(searchQuery.$search.compound.should)
     return this.collection.aggregate([searchQuery]).toArray();
   };
 
