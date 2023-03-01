@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import * as dotenv from 'dotenv';
-import DatabaseClient from './database/main.js';
+import IndexClient from './database/indexer/main.js';
 
 // Config .env variables
 dotenv.config();
@@ -16,13 +16,12 @@ const server = createServer((req, res) => {
 
 server.listen(port, hostname, async () => {
   console.log(`Server running at http://${hostname}:${port}/`);
-  const collection = process.env.MONGODB_COLLECTION;
 
-  const client = new DatabaseClient(collection);
+  const collection = process.env.MONGODB_COLLECTION_INDEXES;
 
-  const result = await client.delete.deleteManyDocuments({
-    location: 'Jupiter',
-  });
+  const client = new IndexClient(collection);
+
+  const result = await client.queryContentIndex('pluto');
 
   console.log(result);
 });

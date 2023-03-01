@@ -4,13 +4,13 @@ import UpdateClient from './update.js';
 import DeleteClient from './delete.js';
 
 export default class DatabaseClient {
-  public insert: InsertClient;
+  protected insert: InsertClient;
 
-  public query: QueryClient;
+  protected query: QueryClient;
 
-  public update: UpdateClient;
+  protected update: UpdateClient;
 
-  public delete: DeleteClient;
+  protected delete: DeleteClient;
 
   constructor(collection: string) {
     this.insert = new InsertClient(collection);
