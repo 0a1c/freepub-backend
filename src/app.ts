@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import * as dotenv from 'dotenv';
 import InsertClient from './database/insert.js';
 import QueryClient from './database/query.js';
+import UpdateClient from './database/update.js';
 
 // Config .env variables
 dotenv.config();
@@ -26,7 +27,20 @@ server.listen(port, hostname, async () => {
 
   const queryClient = new QueryClient(collection);
   const docs = await queryClient.queryByEquality({
-    location: 'Jupiter',
+    location: 'Mars',
   });
   console.log(docs);
+
+  const updateClient = new UpdateClient(collection);
+  const updateId = await updateClient.updateManyDocuments(
+    {
+      location: 'Mars',
+    },
+    {
+      type: 'set',
+      fields: { location: 'New Mars' },
+    }
+  );
+
+  console.log(updateId);
 });
