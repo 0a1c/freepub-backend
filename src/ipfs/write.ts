@@ -17,23 +17,23 @@ export interface FileParams {
 }
 
 export default class IPFSWriteClient {
-  writeFile = async (data: FileContent) => {
+  writeFile = async (data: FileContent): Promise<WriteResponse> => {
     const result = await ipfs.add(data);
 
-    const { cid, size } = result;
-    const response = {
-      cid: cid.toString(),
-      size,
-    } as WriteResponse;
+    const { size } = result;
+    const cid = result.cid.toString();
 
-    return response;
+    return {
+      cid,
+      size,
+    };
   };
 
   writeDirectory = async (files: AsyncIterable<FileParams>) => {
-    const result = await ipfs.addAll(files, {
+    const options = {
       wrapWithDirectory: true,
-    });
+    };
 
-    return result;
+    return ipfs.addAll(files, options);
   };
 }

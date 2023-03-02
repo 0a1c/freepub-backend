@@ -40,6 +40,9 @@ server.listen(port, hostname, async () => {
     console.log(entry);
   }
 
+  const singleDocResult = await writeClient.writeFile('foo');
+  console.log(singleDocResult);
+
   /*
   const client = new ReadClient();
   const source = await client.readContent(

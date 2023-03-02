@@ -1,6 +1,10 @@
 import { pipe } from 'it-pipe';
 import * as Tar from 'it-tar';
 
+/**
+ * Converts a tar-formatted bytestream into a header- & body-formatted
+ * object.
+ */
 async function* tarballed(tarSource) {
   // eslint-disable-next-line
   yield* pipe(tarSource, Tar.extract(), async function* (source) {
@@ -14,6 +18,15 @@ async function* tarballed(tarSource) {
   });
 }
 
+/**
+ * Extracts a bytestream into an object of format
+ * {
+ *  header: Header,
+ *  body: AsyncIterable<Uint8Array>,
+ * }
+ *
+ * where Header is defined {@link https://github.com/alanshaw/it-tar#headers | here}.
+ */
 const extractFileContents = async (byteStream: AsyncIterable<Uint8Array>) =>
   pipe(byteStream, tarballed, (source) => source);
 
