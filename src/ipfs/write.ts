@@ -6,28 +6,13 @@ type FileContent =
   | string
   | Uint8Array;
 
-interface WriteResponse {
-  cid: string;
-  size: number;
-}
-
 export interface FileParams {
   path: string;
   content: FileContent;
 }
 
 export default class IPFSWriteClient {
-  writeFile = async (data: FileContent): Promise<WriteResponse> => {
-    const result = await ipfs.add(data);
-
-    const { size } = result;
-    const cid = result.cid.toString();
-
-    return {
-      cid,
-      size,
-    };
-  };
+  writeFile = async (data: FileContent) => ipfs.add(data);
 
   writeDirectory = async (files: AsyncIterable<FileParams>) => {
     const options = {
