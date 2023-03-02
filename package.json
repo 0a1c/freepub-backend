@@ -24,6 +24,10 @@
   "dependencies": {
     "@types/node": "^18.14.2",
     "dotenv": "^16.0.3",
+    "ipfs-http-client": "^60.0.0",
+    "it-all": "^2.0.0",
+    "it-pipe": "^2.0.5",
+    "it-tar": "^6.0.1",
     "mongodb": "^5.1.0"
   }
 }
